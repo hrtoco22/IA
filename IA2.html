@@ -1,0 +1,73 @@
+// Cria uma classe para representar o perceptron
+class Perceptron {
+  // Inicializa os atributos do perceptron
+  constructor() {
+    // Define o número de entradas
+    this.n = 2;
+    // Cria um vetor para armazenar os pesos sinápticos
+    this.weights = [];
+    // Inicializa os pesos sinápticos com valores aleatórios entre -1 e 1
+    for (let i = 0; i < this.n; i++) {
+      this.weights[i] = Math.random() * 2 - 1;
+    }
+    // Define o valor do bias
+    this.bias = Math.random() * 2 - 1;
+    // Define a taxa de aprendizado
+    this.lr = 0.1;
+  }
+
+  // Define uma função para calcular a saída do perceptron
+  feedforward(inputs) {
+    // Inicializa a soma ponderada das entradas
+    let sum = 0;
+    // Percorre as entradas e os pesos sinápticos
+    for (let i = 0; i < this.n; i++) {
+      // Multiplica cada entrada pelo seu respectivo peso e adiciona à soma
+      sum += inputs[i] * this.weights[i];
+    }
+    // Adiciona o bias à soma
+    sum += this.bias;
+    // Aplica a função de ativação (degrau) à soma e retorna o resultado
+    return this.activate(sum);
+  }
+
+  // Define uma função para aplicar a função de ativação (degrau)
+  activate(sum) {
+    // Se a soma for maior ou igual a zero, retorna 1
+    if (sum >= 0) {
+      return 1;
+    }
+    // Senão, retorna -1
+    else {
+      return -1;
+    }
+  }
+
+  // Define uma função para treinar o perceptron
+  train(inputs, target) {
+    // Calcula a saída do perceptron para as entradas dadas
+    let output = this.feedforward(inputs);
+    // Calcula o erro como a diferença entre a saída esperada e a obtida
+    let error = target - output;
+    // Percorre as entradas e os pesos sinápticos
+    for (let i = 0; i < this.n; i++) {
+      // Atualiza os pesos sinápticos de acordo com a regra delta
+      this.weights[i] += this.lr * error * inputs[i];
+    }
+    // Atualiza o bias de acordo com a regra delta
+    this.bias += this.lr * error;
+  }
+}
+
+// Cria uma instância do perceptron
+let p = new Perceptron();
+
+// Cria alguns dados de treinamento (pontos e suas respectivas classes)
+let data = [
+  { x: -1, y: -1, label: -1 },
+  { x: -1, y: 1, label: -1 },
+  { x: 1, y: -1, label: -1 },
+  { x: 1, y: 1, label: 1 },
+];
+
+// Treina o perceptron com os dados de treinamento por um número de épocas

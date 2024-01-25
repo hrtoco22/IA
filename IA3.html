@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.6.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <script>
+    // Cria a estrutura da rede neural
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 10, activation: 'relu', inputShape: [4] }));
+    model.add(tf.layers.dense({ units: 3, activation: 'softmax' }));
+
+    // Compila o modelo
+    model.compile({ optimizer: 'adam', loss: 'categoricalCrossentropy', metrics: ['accuracy'] });
+
+    // Dados de treinamento
+    const trainingData = {
+      inputs: tf.tensor2d([
+        [5.1, 3.5, 1.4, 0.2],
+        [4.9, 3.0, 1.4, 0.2],
+        [6.2, 3.4, 5.4, 2.3],
+        [5.9, 3.0, 5.1, 1.8],
+        // Adicione mais dados de treinamento aqui...
+      ]),
+      labels: tf.tensor2d([
+        [1, 0, 0], // Iris setosa
+        [1, 0, 0], // Iris setosa
+        [0, 1, 0], // Iris versicolor
+        [0, 1, 0], // Iris versicolor
+        // Adicione mais rótulos aqui...
+      ])
+    };
+
+    // Treina o modelo
+    async function trainModel() {
+      const { inputs, labels } = trainingData;
+      await model.fit(inputs, labels, { epochs: 100 });
+      console.log('Treinamento concluído!');
+    }
+
+    // Testa o modelo com dados de teste
+    function testModel() {
+      const testData = tf.tensor2d([
+        [5.8, 2.8, 5.1, 2.4],
+        [5.7, 3.8, 1.7, 0.3],
+        // Adicione mais dados de teste aqui...
+      ]);
+      const predictions = model.predict(testData);
+      predictions.print();
+    }
+
+    // Chama as funções de treinamento e teste
+    trainModel().then(() => {
+      testModel();
+    });
+  </script>
+</body>
+</html>
